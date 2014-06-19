@@ -8,17 +8,17 @@ var App = App || {};
 			'click #delete': 'deleteBook',
 			'click #update': 'update'
 		},
+
 		initialize: function(){
-			this.model.on('change',this.saveModel, this);
+			// this.model.on('change',this.saveModel, this); 
 			// this.update();
 		},
 		update: function(e){
-
 			var $title = $(this.el).find('ul li.title').text(),
 				$author = $(this.el).find('ul li.author').text(),
 				$releaseDate = $(this.el).find('ul li.releaseDate').text(),
 				$keywords = $(this.el).find('ul li.keywords').text();	
-
+			
 			this.model.set({
 				'title': $title,
 				'author': $author,
@@ -26,10 +26,19 @@ var App = App || {};
 				'keywords':[{'keyword': $keywords}]
 			});
 
+			this.saveModel(); //
+
 		},
 		saveModel: function(){
-			this.model.save();
-			console.log('change event fired');
+
+			this.model.save(null, {
+				success : function(model, response){
+					console.log('Updated Successfully!');
+				},
+				error : function(error){
+					console.log('Some Error Occured While Updating');
+				}
+			});
 			// this.model.save(attrs,{patch:true}); // sends patch request
 		},
 		deleteBook: function(e){
